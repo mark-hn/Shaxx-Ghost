@@ -2,4 +2,4 @@
 [UNDER DEVELOPMENT]
 
 
-Shaxx's Personal Assistant is a prospective Destiny 2 Discord app with some useful features to improve player experience.
+Shaxx's Personal Assistant is a prospective Discord app for the video game Destiny 2 with some useful features to improve player experience.
