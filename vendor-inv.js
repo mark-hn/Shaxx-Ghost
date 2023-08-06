@@ -12,13 +12,8 @@ access_token = process.env.ACCESS_TOKEN
 
 // Function for reading item data from the Destiny Manifest SQLITE3
 
-const db_path = 'manifest.sqlite3';
-
-function getItemData(item_hash) {
+function getItemData(item_hash, db) {
     return new Promise((resolve, reject) => {
-        // Create a new database instance
-        const db = new sqlite3.Database(db_path);
-
         // Perform a SELECT query
         db.all(`SELECT * FROM DestinyInventoryItemDefinition WHERE id + 4294967296 = ${item_hash} OR id = ${item_hash}`, (err, rows) => {
             if (err) {
@@ -35,8 +30,6 @@ function getItemData(item_hash) {
                     resolve('Item not found.');
                 }
             }
-            // Close the database connection
-            db.close();
         });
     })
 }
@@ -66,7 +59,12 @@ async function getXurInventory() {
         for (let key in items) {
             // Obtain item data from manifest using item hash
             let item_hash = items[key].itemHash
-            let item_data = await getItemData(item_hash);
+            // Create a new database instance
+            const db_path = 'manifest.sqlite3';
+            const db = new sqlite3.Database(db_path);
+            let item_data = await getItemData(item_hash, db);
+            // Close the database connection
+            db.close();
 
             if (typeof item_data != "undefined" && item_data.itemCategoryHashes.includes(1) && item_data.inventory.tierType == 6) {
                 // Item is an exotic weapon
@@ -123,7 +121,12 @@ async function getBansheeInventory() {
         for (let key in items) {
             // Obtain item data from manifest using item hash
             let item_hash = items[key].itemHash
-            let item_data = await getItemData(item_hash);
+            // Create a new database instance
+            const db_path = 'manifest.sqlite3';
+            const db = new sqlite3.Database(db_path);
+            let item_data = await getItemData(item_hash, db);
+            // Close the database connection
+            db.close();
 
             // Checks if the item is a weapon
             if (typeof item_data != "undefined" && item_data.itemCategoryHashes.includes(1)) {
