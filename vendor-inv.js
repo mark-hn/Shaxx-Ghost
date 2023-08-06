@@ -119,7 +119,7 @@ async function getBansheeInventory() {
         // Extract item data from get request
         const items = response.data.Response.sales.data
 
-        let items_data = {}
+        let items_data = []
         for (let key in items) {
             // Obtain item data from manifest using item hash
             let item_hash = items[key].itemHash
@@ -127,7 +127,8 @@ async function getBansheeInventory() {
 
             // Checks if the item is a weapon
             if (typeof item_data != "undefined" && item_data.itemCategoryHashes.includes(1)) {
-                items_data[item_data.displayProperties.name] = items[key].overrideNextRefreshDate;
+                let item = { name: item_data.displayProperties.name, hash: item_hash, refreshDate: items[key].overrideNextRefreshDate };
+                items_data.push(item);
             }
         }
         return items_data;

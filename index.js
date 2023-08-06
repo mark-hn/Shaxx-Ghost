@@ -105,14 +105,15 @@ async function gunsmithCommand(interaction) {
     let weekly_weapons = [];
     let featured_weapons = [];
 
-    // Convert refresh date to Date object and classify as weekly or featured weapon
-    for (let item in inventory) {
-        let date = new Date(inventory[item]);
+    // Convert refresh date to Date object and classify items as weekly or featured weapons
+    for (let item of inventory) {
+        console.log(item);
+        let date = new Date(item.refreshDate);
 
         if (date.getDay() === 2) {
-            weekly_weapons.push(item);
+            weekly_weapons.push(`[${item.name}](https://www.light.gg/db/items/${item.hash})`);
         } else {
-            featured_weapons.push(item);
+            featured_weapons.push(`[${item.name}](https://www.light.gg/db/items/${item.hash})`);
         }
     }
 
