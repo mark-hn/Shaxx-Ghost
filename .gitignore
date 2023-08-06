@@ -129,6 +129,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-# ignore .env and manifest
+# Ignore .env and manifest
 /.env
 /manifest.sqlite3
