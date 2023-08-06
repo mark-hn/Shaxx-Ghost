@@ -11,6 +11,7 @@ function get_authorization_url() {
     const redirect_url = 'https://webhook.site/2631d643-5d1d-4029-977b-776b4a3c7335';
     const authorization_url = 'https://www.bungie.net/en/OAuth/Authorize';
 
+    // Parameters of the URL
     const authParams = new URLSearchParams({
         client_id: client_id,
         response_type: 'code',
@@ -20,7 +21,7 @@ function get_authorization_url() {
     const authUrl = `${authorization_url}?${authParams.toString()}`;
 
     return `Authorization URL: ${authUrl}`;
-    // open the returned URL and the authorization code will be in the query string of the redirect URL
+    // Open the returned URL and the authorization code will be in the query string of the redirect URL
 }
 
 
@@ -34,7 +35,7 @@ function get_access_token(authorization_code) {
 
     const token_url = 'https://www.bungie.net/platform/app/oauth/token/';
 
-    // parameters of the post request
+    // Parameters of the post request
     const data = new URLSearchParams();
     data.append('grant_type', 'authorization_code');
     data.append('client_id', client_id);
@@ -69,7 +70,7 @@ function refresh_token(refresh_token) {
     const client_secret = process.env.CLIENT_SECRET;
     const token_url = 'https://www.bungie.net/platform/app/oauth/token/';
 
-    // parameters of the post request
+    // Parameters of the post request
     const data = new URLSearchParams();
     data.append('grant_type', 'refresh_token');
     data.append('client_id', client_id);
@@ -95,6 +96,9 @@ function refresh_token(refresh_token) {
 
 
 
-// console.log(get_authorization_url());
-// get_access_token('[insert authorization code]')
-refresh_token(process.env.REFRESH_TOKEN)
+function main() {
+    // console.log(get_authorization_url());
+    // get_access_token('[insert authorization code]');
+    refresh_token(process.env.REFRESH_TOKEN);
+}
+main();
