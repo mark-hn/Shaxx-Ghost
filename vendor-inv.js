@@ -12,11 +12,11 @@ access_token = process.env.ACCESS_TOKEN
 
 // Function for reading item data from the Destiny Manifest SQLITE3
 
-function getItemData(item_hash) {
-    const db_path = 'manifest.sqlite3';
-    // Create a new database instance
+const db_path = 'manifest.sqlite3';
 
+function getItemData(item_hash) {
     return new Promise((resolve, reject) => {
+        // Create a new database instance
         const db = new sqlite3.Database(db_path);
 
         // Perform a SELECT query
@@ -48,7 +48,7 @@ function getItemData(item_hash) {
 async function getXurInventory() {
     const xur_url = `https://www.bungie.net/Platform/Destiny2/3/Profile/${process.env.DESTINY_MEMBERSHIP_ID}/Character/${process.env.CHARACTER_ID}/Vendors/2190858386/?components=402`;
 
-    // headers of the get request
+    // Headers of the get request
     const headers = {
         'X-API-Key': api_key,
         'Authorization': `Bearer ${access_token}`,
@@ -58,13 +58,45 @@ async function getXurInventory() {
         response = await axios.get(xur_url, { headers })
         const error_stat = response.data.ErrorStatus;
         console.log('Error status: ' + error_stat + '\n');
-    } catch (error) {
-        console.error('Error:', error.response.data);
-        console.error('Status Code:', error.response.status);
-        console.error('Status Text:', error.response.statusText);
 
-        // checks if Xur is not present
-        if (error.response.data.ErrorStatus === 'DestinyVendorNotFound') {
+        // Extract item data from get request
+        const items = response.data.Response.sales.data;
+
+        let items_data = { 'weapons': [], 'armour': [] }
+        for (let key in items) {
+            // Obtain item data from manifest using item hash
+            let item_hash = items[key].itemHash
+            let item_data = await getItemData(item_hash);
+
+            if (typeof item_data != "undefined" && item_data.itemCategoryHashes.includes(1) && item_data.inventory.tierType == 6) {
+                // Item is an exotic weapon
+                let item = {};
+                item['hash'] = item_hash;
+                item['name'] = item_data.displayProperties.name;
+                items_data.weapons.push(item);
+            } else if (typeof item_data != "undefined" && item_data.itemCategoryHashes.includes(20) && item_data.inventory.tierType == 6) {
+                // Item is an exotic armour piece
+                let item = {};
+                item['hash'] = item_hash;
+                item['name'] = item_data.displayProperties.name;
+
+                if (item_data.itemCategoryHashes.includes(21)) {
+                    item['class'] = 'Warlock'
+                } else if (item_data.itemCategoryHashes.includes(22)) {
+                    item['class'] = 'Titan'
+                } else if (item_data.itemCategoryHashes.includes(23)) {
+                    item['class'] = 'Hunter'
+                }
+
+                items_data.armour.push(item);
+            }
+        }
+        return items_data;
+    } catch (error) {
+        console.log('Error:', error.response ? error.response.status : error.message)
+
+        // Checks if Xur is not present
+        if (typeof error.response.data.ErrorStatus != 'undefined' && error.response.data.ErrorStatus === 'DestinyVendorNotFound') {
             return 'Xûr is currently on hiatus.';
         }
     }
@@ -73,7 +105,7 @@ async function getXurInventory() {
 async function getBansheeInventory() {
     const banshee_url = `https://www.bungie.net/Platform/Destiny2/3/Profile/${process.env.DESTINY_MEMBERSHIP_ID}/Character/${process.env.CHARACTER_ID}/Vendors/672118013/?components=402`
 
-    // headers of the get request
+    // Headers of the get request
     const headers = {
         'X-API-Key': api_key,
         'Authorization': `Bearer ${access_token}`,
@@ -84,14 +116,16 @@ async function getBansheeInventory() {
         const error_stat = response.data.ErrorStatus;
         console.log('Error status: ' + error_stat + '\n');
 
-        // extract item data from get request
+        // Extract item data from get request
         const items = response.data.Response.sales.data
+
         let items_data = {}
         for (let key in items) {
+            // Obtain item data from manifest using item hash
             let item_hash = items[key].itemHash
             let item_data = await getItemData(item_hash);
 
-            // checks if the item is a weapon
+            // Checks if the item is a weapon
             if (typeof item_data != "undefined" && item_data.itemCategoryHashes.includes(1)) {
                 items_data[item_data.displayProperties.name] = items[key].overrideNextRefreshDate;
             }
@@ -135,9 +169,6 @@ function getVendorData(vendor_hash) {
     })
 }
 
-async function main(){
-    console.log(await getBansheeInventory());
-}
 
 // Exports the functions to be used in other files
 module.exports = { getXurInventory, getBansheeInventory };
