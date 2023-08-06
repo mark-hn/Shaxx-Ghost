@@ -7,7 +7,7 @@ async function getItemInformation(apiKey, itemName) {
     const baseUrl = 'https://www.bungie.net/Platform';
     const headers = { 'X-API-Key': apiKey };
 
-    // obtain JSON data from Manifest/DestinyInventoryItemDefinition
+    // Obtain JSON data from Manifest/DestinyInventoryItemDefinition
     try {
         // Search for the item
         const searchUrl = `${baseUrl}/Destiny2/Armory/Search/DestinyInventoryItemDefinition/${itemName}/`;
@@ -23,9 +23,9 @@ async function getItemInformation(apiKey, itemName) {
                     const itemResponse = await axios.get(itemUrl, { headers });
                     const itemData = itemResponse.data.Response;
 
-                    // check if item is a weapon or armour piece
+                    // Check if item is a weapon or armour piece
                     if (itemData.itemCategoryHashes.includes(1) || itemData.itemCategoryHashes.includes(20)) {
-                        // clean item data
+                        // Clean item data
                         cleanData = cleanItemInformation(itemData);
                         return cleanData;
                     }
@@ -41,7 +41,7 @@ async function getItemInformation(apiKey, itemName) {
 }
 
 function cleanItemInformation(itemData) {
-    // extract item data from JSON
+    // Extract item data from JSON
     let cleanData = {};
     cleanData['itemName'] = itemData.displayProperties.name;
     cleanData['itemIcon'] = itemData.displayProperties.icon;
@@ -49,10 +49,10 @@ function cleanItemInformation(itemData) {
     cleanData['itemType'] = itemData.itemTypeAndTierDisplayName;
     cleanData['itemRarity'] = itemData.inventory.tierTypeName;
 
-    if (itemData.itemType === 3) { // item is a weapon
+    if (itemData.itemType === 3) { // Item is a weapon
         cleanData['itemCategory'] = 'Weapon';
-        
-        // extract item slot
+
+        // Extract item slot
         if (itemData.equippingBlock.equipmentSlotTypeHash === 953998645) {
             cleanData['itemSlot'] = 'Power';
         } else if (itemData.equippingBlock.equipmentSlotTypeHash === 2465295065) {
@@ -61,7 +61,7 @@ function cleanItemInformation(itemData) {
             cleanData['itemSlot'] = 'Kinetic';
         }
 
-        // extract item damage
+        // Extract item damage
         if (itemData.damageTypes[0] === 1) {
             cleanData['itemDamage'] = 'Kinetic';
         } else if (itemData.damageTypes[0] === 2) {
@@ -77,10 +77,10 @@ function cleanItemInformation(itemData) {
         } else if (itemData.damageTypes[0] === 7) {
             cleanData['itemDamage'] = 'Strand';
         }
-    } else if (itemData.itemType === 2) { // item is an armour piece
+    } else if (itemData.itemType === 2) { // Item is an armour piece
         cleanData['itemCategory'] = 'Armour';
-        
-        // extract item slot
+
+        // Extract item slot
         if (itemData.itemCategoryHashes[1] === 45) {
             cleanData['itemSlot'] = 'Helmet';
         } else if (itemData.itemCategoryHashes[1] === 46) {
@@ -93,7 +93,7 @@ function cleanItemInformation(itemData) {
             cleanData['itemSlot'] = 'Class Item';
         }
 
-        // extract item class
+        // Extract item class
         if (itemData.itemCategoryHashes[0] === 21) {
             cleanData['itemClass'] = 'Warlock';
         } else if (itemData.itemCategoryHashes[0] === 22) {
