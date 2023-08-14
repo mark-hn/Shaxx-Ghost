@@ -1,6 +1,9 @@
 const axios = require('axios');
 const dotenv = require('dotenv');
 
+const config = require('./config.json');
+const jsonfile = require('jsonfile');
+
 dotenv.config();
 
 
@@ -28,7 +31,7 @@ function get_authorization_url() {
 
 // FUNCTION FOR GETTING THE ACCESS TOKEN:
 
-function get_access_token(authorization_code) {
+async function get_access_token(authorization_code) {
     const client_id = process.env.BUNGIE_CLIENT_ID;
     const client_secret = process.env.CLIENT_SECRET;
     const redirect_url = 'https://webhook.site/2631d643-5d1d-4029-977b-776b4a3c7335';
@@ -43,16 +46,23 @@ function get_access_token(authorization_code) {
     data.append('code', authorization_code);
     data.append('redirect_uri', redirect_url);
 
-    const config = {
+    const headers = {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded', },
     };
 
-    axios
-        .post(token_url, data, config)
+    // Send post request
+    await axios
+        .post(token_url, data, headers)
         .then((response) => {
-            console.log(response.data)
-            console.log("Access token:", response.data.access_token)
-            console.log("Refresh token:", response.data.refresh_token)
+            // Write access token and refresh token to config file
+            config.accessToken = response.data.access_token
+            config.refreshToken = response.data.refresh_token
+
+            jsonfile.writeFile('./config.json', config)
+                .then(res => {
+                    console.log('Access token and refresh token written to config file.')
+                })
+                .catch(error => console.error(error))
         })
         .catch((error) => {
             console.error('Error:', error.response.data);
@@ -65,7 +75,7 @@ function get_access_token(authorization_code) {
 
 // FUNCTION FOR REFRESHING THE ACCESS TOKEN
 
-function refresh_token(refresh_token) {
+async function refresh_token(refresh_token) {
     const client_id = process.env.BUNGIE_CLIENT_ID;
     const client_secret = process.env.CLIENT_SECRET;
     const token_url = 'https://www.bungie.net/platform/app/oauth/token/';
@@ -77,15 +87,22 @@ function refresh_token(refresh_token) {
     data.append('client_secret', client_secret);
     data.append('refresh_token', refresh_token);
 
-    const config = {
+    const headers = {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded', },
     };
 
-    axios
-        .post(token_url, data, config)
+    // Send post request
+    await axios
+        .post(token_url, data, headers)
         .then((response) => {
-            console.log("Token refreshed.");
-            console.log("Access token:", response.data.access_token)
+            // Write new access token to config file
+            config.accessToken = response.data.access_token;
+
+            jsonfile.writeFile('./config.json', config)
+                .then(res => {
+                    console.log('Token refreshed and written to config file.')
+                })
+                .catch(error => console.error(error))
         })
         .catch((error) => {
             console.error('Error:', error.response.data);
@@ -99,6 +116,6 @@ function refresh_token(refresh_token) {
 function main() {
     // console.log(get_authorization_url());
     // get_access_token('[insert authorization code]');
-    refresh_token(process.env.REFRESH_TOKEN);
+    refresh_token(config.refreshToken);
 }
 main();

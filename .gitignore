@@ -132,3 +132,4 @@ dist
 # Ignore .env and manifest
 /.env
 /manifest.sqlite3
+/config.json

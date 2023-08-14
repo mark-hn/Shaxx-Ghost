@@ -3,11 +3,13 @@ const axios = require('axios');
 const dotenv = require('dotenv');
 dotenv.config();
 
+const config = require('./config.json');
+
 const sqlite3 = require('sqlite3').verbose();
 
 const api_key = process.env.BUNGIE_API_KEY;
 const base_url = 'https://www.bungie.net/Platform/';
-access_token = process.env.ACCESS_TOKEN
+access_token = config.accessToken;
 
 
 // Function for reading item data from the Destiny Manifest SQLITE3
