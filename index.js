@@ -142,23 +142,43 @@ async function xurCommand(interaction) {
 
     const inventory = await getXurInventory();
 
-    // Build embed object
-    embed = new EmbedBuilder()
-        .setTitle('Xûr: Agent of the Nine')
-        .setURL('https://www.light.gg/db/vendors/2190858386/x%C3%BBr/')
-        .setThumbnail('https://www.bungie.net/img/destiny_content/vendor/icons/xur_large_icon.png')
-        .setDescription("A peddler of strange curios, Xûr's motives are not his own. He bows to his distant masters, the Nine.")
-        .setFooter({ text: "Xûr's inventory", iconURL: 'https://www.pngkey.com/png/full/440-4408148_destiny-clipart-destiny-game-destiny.png' })
-        .setTimestamp()
+    if (typeof inventory === 'string') {
+        // Obtain timestamp for Xur's return
+        const currentDate = new Date();
+        const daysUntilNextFriday = (12 - currentDate.getDay()) % 7;
+        const nextFriday = new Date(currentDate);
+        nextFriday.setDate(currentDate.getDate() + daysUntilNextFriday);
+        nextFriday.setHours(13, 0, 0, 0);
+        const unixTime = Math.floor(nextTuesday.getTime() / 1000);
 
-    // Add fields for Xur's sales
-    for (let item of inventory.armour) {
-        embed.addFields({ name: `${item.class} Armor`, value: `[${item.name}](https://www.light.gg/db/items/${item.hash})`, inline: true });
-    }
-    for (let item of inventory.weapons) {
-        embed.addFields({ name: 'Weapon', value: `[${item.name}](https://www.light.gg/db/items/${item.hash})`, inline: true });
-    }
+        interaction.editReply(`${inventory}. He will return <t:${unixTime}:R>.`);
+    } else {
+        // Obtain timestamp for Xur's departure
+        const currentDate = new Date();
+        const daysUntilNextTuesday = (9 - currentDate.getDay()) % 7;
+        const nextTuesday = new Date(currentDate);
+        nextTuesday.setDate(currentDate.getDate() + daysUntilNextTuesday);
+        nextTuesday.setHours(13, 0, 0, 0);
+        const unixTime = Math.floor(nextTuesday.getTime() / 1000);
 
-    // Edit message by adding embed
-    await interaction.editReply({ embeds: [embed] });
+        // Build embed object
+        embed = new EmbedBuilder()
+            .setTitle('Xûr: Agent of the Nine')
+            .setURL('https://www.light.gg/db/vendors/2190858386/x%C3%BBr/')
+            .setThumbnail('https://www.bungie.net/img/destiny_content/vendor/icons/xur_large_icon.png')
+            .setDescription(`A peddler of strange curios, Xûr's motives are not his own. He bows to his distant masters, the Nine. Xûr will depart <t:${unixTime}:R>.`)
+            .setFooter({ text: "Xûr's inventory", iconURL: 'https://www.pngkey.com/png/full/440-4408148_destiny-clipart-destiny-game-destiny.png' })
+            .setTimestamp()
+
+        // Add fields for Xur's sales
+        for (let item of inventory.armour) {
+            embed.addFields({ name: `${item.class} Armor`, value: `[${item.name}](https://www.light.gg/db/items/${item.hash})`, inline: true });
+        }
+        for (let item of inventory.weapons) {
+            embed.addFields({ name: 'Weapon', value: `[${item.name}](https://www.light.gg/db/items/${item.hash})`, inline: true });
+        }
+
+        // Edit message by adding embed
+        await interaction.editReply({ embeds: [embed] });
+    }
 }
