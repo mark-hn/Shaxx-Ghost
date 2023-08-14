@@ -52,7 +52,6 @@ async function getXurInventory() {
     try {
         response = await axios.get(xur_url, { headers })
         const error_stat = response.data.ErrorStatus;
-        console.log('Error status: ' + error_stat + '\n');
 
         // Extract item data from get request
         const items = response.data.Response.sales.data;
@@ -114,7 +113,6 @@ async function getBansheeInventory() {
     try {
         let response = await axios.get(banshee_url, { headers })
         const error_stat = response.data.ErrorStatus;
-        console.log('Error status: ' + error_stat + '\n');
 
         // Extract item data from get request
         const items = response.data.Response.sales.data

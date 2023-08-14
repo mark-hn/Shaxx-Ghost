@@ -107,7 +107,6 @@ async function gunsmithCommand(interaction) {
 
     // Convert refresh date to Date object and classify items as weekly or featured weapons
     for (let item of inventory) {
-        console.log(item);
         let date = new Date(item.refreshDate);
 
         if (date.getDay() === 2) {
