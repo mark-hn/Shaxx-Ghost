@@ -109,7 +109,7 @@ async function gunsmithCommand(interaction) {
     for (let item of inventory) {
         let date = new Date(item.refreshDate);
 
-        if (date.getDay() === 2) {
+        if (date.getDay() === 2 && weekly_weapons.length < 6) {
             weekly_weapons.push(`[${item.name}](https://www.light.gg/db/items/${item.hash})`);
         } else {
             featured_weapons.push(`[${item.name}](https://www.light.gg/db/items/${item.hash})`);
@@ -129,7 +129,7 @@ async function gunsmithCommand(interaction) {
     if (weekly_weapons.length > 0) {
         embed.addFields({ name: 'Weekly Weapons:', value: weekly_weapons.join(', ') });
     } if (featured_weapons.length > 0) {
-        embed.addFields({ name: 'Featured Weapons:', value: featured_weapons.join(', ') });
+        embed.addFields({ name: 'Daily Weapons:', value: featured_weapons.join(', ') });
     }
 
     // Edit message by adding embed
