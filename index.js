@@ -148,9 +148,9 @@ async function xurCommand(interaction) {
         const nextFriday = new Date(currentDate);
         nextFriday.setDate(currentDate.getDate() + daysUntilNextFriday);
         nextFriday.setHours(13, 0, 0, 0);
-        const unixTime = Math.floor(nextTuesday.getTime() / 1000);
+        const unixTime = Math.floor(nextFriday.getTime() / 1000);
 
-        interaction.editReply(`${inventory}. He will return <t:${unixTime}:R>.`);
+        interaction.editReply(`${inventory}.. he will return <t:${unixTime}:R>.`);
     } else {
         // Obtain timestamp for Xur's departure
         const currentDate = new Date();
