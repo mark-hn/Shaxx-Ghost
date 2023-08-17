@@ -150,7 +150,18 @@ async function xurCommand(interaction) {
         nextFriday.setHours(13, 0, 0, 0);
         const unixTime = Math.floor(nextFriday.getTime() / 1000);
 
-        interaction.editReply(`${inventory}.. he will return <t:${unixTime}:R>.`);
+        // Build embed object
+        embed = new EmbedBuilder()
+            .setTitle('Xûr: Agent of the Nine')
+            .setURL('https://www.light.gg/db/vendors/2190858386/x%C3%BBr/')
+            .setThumbnail('https://www.bungie.net/img/destiny_content/vendor/icons/xur_large_icon.png')
+            .setDescription(`A peddler of strange curios, Xûr's motives are not his own. He bows to his distant masters, the Nine.`)
+            .setFooter({ text: "Xûr's inventory", iconURL: 'https://www.pngkey.com/png/full/440-4408148_destiny-clipart-destiny-game-destiny.png' })
+            .setTimestamp()
+            .addFields({ name: 'Xûr is currently on hiatus', value: `He will return <t:${unixTime}:R>.` })
+
+        // Edit message by adding embed
+        await interaction.editReply({ embeds: [embed] });
     } else {
         // Obtain timestamp for Xur's departure
         const currentDate = new Date();
