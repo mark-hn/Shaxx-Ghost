@@ -1,5 +1,5 @@
-# Shaxx-Personal-Assistant
+# Shaxx-Ghost
 [UNDER DEVELOPMENT]
 
 
-Shaxx's Personal Assistant is a prospective Discord app for the video game Destiny 2 with some useful features to improve player experience.
+Shaxx's Ghost is a prospective Discord app for the video game Destiny 2 with some useful features to improve player experience.

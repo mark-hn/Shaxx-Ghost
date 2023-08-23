@@ -41,7 +41,7 @@ function getItemData(item_hash, db) {
 // Functions for accessing vendor inventories from the API
 
 async function getXurInventory() {
-    const xur_url = `https://www.bungie.net/Platform/Destiny2/3/Profile/${process.env.DESTINY_MEMBERSHIP_ID}/Character/${process.env.CHARACTER_ID}/Vendors/2190858386/?components=402`;
+    const xur_url = `${base_url}Destiny2/3/Profile/${process.env.DESTINY_MEMBERSHIP_ID}/Character/${process.env.CHARACTER_ID}/Vendors/2190858386/?components=402`;
 
     // Headers of the get request
     const headers = {
@@ -102,7 +102,7 @@ async function getXurInventory() {
 }
 
 async function getBansheeInventory() {
-    const banshee_url = `https://www.bungie.net/Platform/Destiny2/3/Profile/${process.env.DESTINY_MEMBERSHIP_ID}/Character/${process.env.CHARACTER_ID}/Vendors/672118013/?components=402`
+    const banshee_url = `${base_url}Destiny2/3/Profile/${process.env.DESTINY_MEMBERSHIP_ID}/Character/${process.env.CHARACTER_ID}/Vendors/672118013/?components=402`
 
     // Headers of the get request
     const headers = {
