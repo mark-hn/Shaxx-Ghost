@@ -129,7 +129,7 @@ async function getBansheeInventory() {
             db.close();
 
             // Checks if the item is a weapon
-            if (typeof item_data != "undefined" && item_data.itemCategoryHashes.includes(1)) {
+            if (item_data.itemCategoryHashes && item_data.itemCategoryHashes.includes(1)) {
                 let item = { name: item_data.displayProperties.name, hash: item_hash, refreshDate: items[key].overrideNextRefreshDate };
                 items_data.push(item);
             }
@@ -173,11 +173,6 @@ function getVendorData(vendor_hash) {
     })
 }
 
-async function main(){
-    console.log(await getBansheeInventory());
-}
-
-main();
 
 // Exports the functions to be used in other files
 module.exports = { getXurInventory, getBansheeInventory };
