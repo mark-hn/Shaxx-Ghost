@@ -109,7 +109,7 @@ async function gunsmithCommand(interaction) {
     for (let item of inventory) {
         let date = new Date(item.refreshDate);
 
-        if (date.getDay() === 2 && weekly_weapons.length < 6) {
+        if (date.getDay() === 3 && weekly_weapons.length < 6) {
             weekly_weapons.push(`[${item.name}](https://www.light.gg/db/items/${item.hash})`);
         } else {
             featured_weapons.push(`[${item.name}](https://www.light.gg/db/items/${item.hash})`);
