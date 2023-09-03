@@ -115,7 +115,7 @@ async function refresh_token(refresh_token) {
 
 function main() {
     // console.log(get_authorization_url());
-    // get_access_token('[insert authorization code]');
+    // get_access_token('a52b92fd440432c7afc58a498bd8984d');
     refresh_token(config.refreshToken);
 }
 main();

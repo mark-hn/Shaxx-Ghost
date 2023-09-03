@@ -100,7 +100,7 @@ function infoCommand(interaction) {
 async function gunsmithCommand(interaction) {
     await interaction.reply('Processing request...');
 
-    const inventory = await getBansheeInventory();
+    const inventory = await getBansheeInventory()
 
     let weekly_weapons = [];
     let featured_weapons = [];

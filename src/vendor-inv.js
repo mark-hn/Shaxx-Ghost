@@ -173,6 +173,11 @@ function getVendorData(vendor_hash) {
     })
 }
 
+async function main(){
+    console.log(await getBansheeInventory());
+}
+
+main();
 
 // Exports the functions to be used in other files
 module.exports = { getXurInventory, getBansheeInventory };
