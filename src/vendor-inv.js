@@ -92,12 +92,12 @@ async function getXurInventory() {
         }
         return items_data;
     } catch (error) {
-        console.log('Error:', error.response ? error.response.status : error.message)
-
         // Checks if Xur is not present
         if (typeof error.response.data.ErrorStatus != 'undefined' && error.response.data.ErrorStatus === 'DestinyVendorNotFound') {
             return 'Xûr is currently on hiatus.';
         }
+
+        console.log('Error:', error.response ? error.response.status : error.message)
     }
 }
 

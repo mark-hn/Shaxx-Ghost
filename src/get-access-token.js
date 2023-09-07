@@ -1,10 +1,11 @@
 const axios = require('axios');
 const dotenv = require('dotenv');
+dotenv.config();
 
 const config = require('./config.json');
 const jsonfile = require('jsonfile');
 
-dotenv.config();
+
 
 
 // FUNCTION FOR GETTING THE AUTHORIZATION URL:
@@ -55,8 +56,10 @@ async function get_access_token(authorization_code) {
         .post(token_url, data, headers)
         .then((response) => {
             // Write access token and refresh token to config file
-            config.accessToken = response.data.access_token
-            config.refreshToken = response.data.refresh_token
+            config.accessToken = response.data.access_token;
+            config.refreshToken = response.data.refresh_token;
+            config.expiresIn = response.data.expires_in;
+            config.refreshExpiresIn = response.data.refresh_expires_in;
 
             jsonfile.writeFile('./config.json', config)
                 .then(res => {
@@ -75,7 +78,7 @@ async function get_access_token(authorization_code) {
 
 // FUNCTION FOR REFRESHING THE ACCESS TOKEN
 
-async function refresh_token(refresh_token) {
+async function refresh_token(refresh_token = config.refreshToken) {
     const client_id = process.env.BUNGIE_CLIENT_ID;
     const client_secret = process.env.CLIENT_SECRET;
     const token_url = 'https://www.bungie.net/platform/app/oauth/token/';
@@ -97,8 +100,9 @@ async function refresh_token(refresh_token) {
         .then((response) => {
             // Write new access token to config file
             config.accessToken = response.data.access_token;
+            config.expiresIn = response.data.expires_in;
 
-            jsonfile.writeFile('./config.json', config)
+            jsonfile.writeFile('./src/config.json', config)
                 .then(res => {
                     console.log('Token refreshed and written to config file.')
                 })
@@ -112,10 +116,11 @@ async function refresh_token(refresh_token) {
 }
 
 
-
 function main() {
     // console.log(get_authorization_url());
-    // get_access_token('a52b92fd440432c7afc58a498bd8984d');
-    refresh_token(config.refreshToken);
+    // get_access_token('[insert auth code]');
+    // refresh_token(config.refreshToken);
 }
-main();
+// main();
+
+module.exports = { refresh_token, get_access_token }

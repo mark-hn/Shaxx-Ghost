@@ -2,9 +2,13 @@ const { Client, EmbedBuilder, GatewayIntentBits, Events, hyperlink } = require('
 
 const getItemInformation = require('./item-info.js')
 const { getXurInventory, getBansheeInventory } = require('./vendor-inv.js')
+const { refresh_token, get_access_token } = require('./get-access-token.js')
 
 const dotenv = require('dotenv');
 dotenv.config();
+
+const config = require('./config.json');
+
 
 const client = new Client({
     intents: [
@@ -22,8 +26,12 @@ client.on('ready', () => {
 })
 
 
-// Process interactions with the bot
+// Refresh access token on expiry
+setInterval(refresh_token, (config.expiresIn * 1000));
 
+
+
+// Process interactions with the bot
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand()) return;
 
